@@ -4,5 +4,5 @@ export const GITHUB_CONSTANTS = Object.freeze({
 });
 
 export const API_URLS = Object.freeze({
-  getPullRequests: () => 'TODO',
+  getIssues: (query: string) => `/search/issues?q=${query}`,
 });

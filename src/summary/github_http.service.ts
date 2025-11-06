@@ -6,18 +6,14 @@ import { GITHUB_CONSTANTS } from 'src/config/constants';
 
 @Injectable()
 export class GithubHttpService {
-  private axiosInstance: AxiosInstance;
+  private client: AxiosInstance;
 
   constructor(private readonly configService: ConfigService) {
     this.initializeClient();
   }
 
-  get agent() {
-    return this.axiosInstance;
-  }
-
   private initializeClient() {
-    this.axiosInstance = axios.create({
+    this.client = axios.create({
       baseURL: GITHUB_CONSTANTS.API_BASE_URL,
       headers: this.generateHeaders(),
       timeout: GITHUB_CONSTANTS.API_REQUEST_TIMEOUT,
@@ -38,5 +34,9 @@ export class GithubHttpService {
       Authorization: `Bearer ${bearerToken}`,
       'X-GitHub-Api-Version': '2022-11-28',
     };
+  }
+
+  public async getPullRequests(query: string) {
+    // TODO
   }
 }
