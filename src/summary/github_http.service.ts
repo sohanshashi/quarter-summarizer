@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 
-import { GITHUB_CONSTANTS } from 'src/config/constants';
+import { API_URLS, GITHUB_CONSTANTS } from 'src/config/constants';
+import { PullRequest } from './structures/PullRequest';
+import { ApiPullRequest } from 'src/types';
 
 @Injectable()
 export class GithubHttpService {
@@ -37,6 +39,10 @@ export class GithubHttpService {
   }
 
   public async getPullRequests(query: string) {
-    // TODO
+    const response = await this.client.get(API_URLS.getIssues(query));
+
+    return (response.data as { items: ApiPullRequest[] }).items.map(
+      (item) => new PullRequest(item),
+    );
   }
 }

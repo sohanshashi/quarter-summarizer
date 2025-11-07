@@ -1,20 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
 import { GithubHttpService } from './github_http.service';
-
-type GetSummaryParams = {
-  username: string;
-  orgName: string;
-  startDate: string;
-  endDate: string;
-};
+import { GetSummaryParams } from 'src/types';
 
 @Injectable()
 export class SummaryService {
   constructor(private readonly githubHttpService: GithubHttpService) {}
 
-  async getSummary({
+  async getPullRequests({
     username,
     orgName,
     startDate,
@@ -27,12 +20,7 @@ export class SummaryService {
       endDate,
     });
 
-    try {
-      const pullRequests = await this.githubHttpService.getPullRequests(query);
-    } catch (err) {
-      // TODO: handle this properly
-      console.log('Error getting summary', err);
-    }
+    return this.githubHttpService.getPullRequests(query);
   }
 
   private getQueryString({

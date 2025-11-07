@@ -1,6 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
 import { SummaryService } from './summary.service';
-import { GithubHttpService } from './github_http.service';
 
 @Controller('summary')
 export class SummaryController {
@@ -8,6 +7,13 @@ export class SummaryController {
 
   @Get()
   async getSummary() {
-    return 'Summary';
+    const pullRequests = await this.summaryService.getPullRequests({
+      username: 'sohanshashi',
+      orgName: 'interviewstreet',
+      startDate: '2025-09-01',
+      endDate: '2025-11-07',
+    });
+
+    return pullRequests;
   }
 }
