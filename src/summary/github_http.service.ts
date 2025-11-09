@@ -34,7 +34,7 @@ export class GithubHttpService {
     return {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${bearerToken}`,
-      'X-GitHub-Api-Version': '2022-11-28',
+      'X-GitHub-Api-Version': GITHUB_CONSTANTS.API_VERSION,
     };
   }
 
