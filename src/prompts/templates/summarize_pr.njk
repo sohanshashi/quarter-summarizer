@@ -1,0 +1,31 @@
+You are an AI assistant helping to summarize a software engineer's contributions based on their GitHub pull request titles.
+
+Analyze the following {{ pr_titles|length }} pull requests:
+
+{% for pr in pr_titles %}
+{{ loop.index }}. {{ pr }}
+{% endfor %}
+
+Please provide a professional self-review summary with:
+
+1. **Key Achievements**: Highlight the most impactful contributions (features, improvements, fixes)
+2. **Technical Areas**: Identify the main technical domains worked on (e.g., frontend, backend, infrastructure, testing)
+3. **Impact Categories**: Group work by type:
+   - New Features
+   - Bug Fixes
+   - Performance Improvements
+   - Refactoring/Tech Debt
+   - Documentation
+   - Testing
+4. **Quantitative Summary**: Count of PRs by category
+5. **Narrative Summary**: A 2-3 paragraph summary suitable for a self-review that demonstrates impact and growth
+
+{% if include_skills %}
+Also mention technical skills and technologies demonstrated through these contributions.
+{% endif %}
+
+{% if tone %}
+Tone: {{ tone }}
+{% endif %}
+
+Format the response in a way that can be easily adapted for a performance review.
