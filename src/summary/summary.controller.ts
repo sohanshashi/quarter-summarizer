@@ -10,10 +10,12 @@ export class SummaryController {
     const pullRequests = await this.summaryService.getPullRequests({
       username: 'sohanshashi',
       orgName: 'interviewstreet',
-      startDate: '2025-09-01',
-      endDate: '2025-11-07',
+      startDate: '2025-10-01',
+      endDate: '2025-12-31',
     });
 
-    return pullRequests;
+    await this.summaryService.getAiSummary(pullRequests);
+
+    return 'success';
   }
 }

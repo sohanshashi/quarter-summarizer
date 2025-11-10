@@ -2,10 +2,15 @@ import { Injectable } from '@nestjs/common';
 
 import { GithubHttpService } from './github_http.service';
 import { GetSummaryParams } from 'src/types';
+import { PullRequest } from './structures/PullRequest';
+import { AiSummarizerService } from './ai_summarizer.service';
 
 @Injectable()
 export class SummaryService {
-  constructor(private readonly githubHttpService: GithubHttpService) {}
+  constructor(
+    private readonly githubHttpService: GithubHttpService,
+    private readonly aiSummarizerService: AiSummarizerService,
+  ) {}
 
   async getPullRequests({
     username,
@@ -21,6 +26,10 @@ export class SummaryService {
     });
 
     return this.githubHttpService.getPullRequests(query);
+  }
+
+  async getAiSummary(pullRequests: PullRequest[]) {
+    return this.aiSummarizerService.getAiSummary(pullRequests);
   }
 
   private getQueryString({
