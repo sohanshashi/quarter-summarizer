@@ -28,8 +28,8 @@ export class SummaryService {
     return this.githubHttpService.getPullRequests(query);
   }
 
-  async getAiSummary(pullRequests: PullRequest[]) {
-    return this.aiSummarizerService.getAiSummary(pullRequests);
+  async getAiSummary(pullRequests: PullRequest[], model: string) {
+    return this.aiSummarizerService.getAiSummary(pullRequests, model);
   }
 
   private getQueryString({

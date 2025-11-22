@@ -1,21 +1,31 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
+
 import { SummaryService } from './summary.service';
+import { GetSummaryQueryDto } from './dto/get_summary_query_dto';
 
 @Controller('summary')
 export class SummaryController {
   constructor(private readonly summaryService: SummaryService) {}
 
   @Get()
-  async getSummary() {
+  async getSummary(@Query() query: GetSummaryQueryDto) {
+    const { username, orgName, startDate, endDate, model } = query;
+
     const pullRequests = await this.summaryService.getPullRequests({
-      username: 'sohanshashi',
-      orgName: 'interviewstreet',
-      startDate: '2025-10-01',
-      endDate: '2025-12-31',
+      username,
+      orgName,
+      startDate,
+      endDate: endDate || new Date().toISOString().split('T')[0],
     });
 
-    await this.summaryService.getAiSummary(pullRequests);
+    const stream = await this.summaryService.getAiSummary(pullRequests, model);
 
-    return 'success';
+    for await (const chunk of stream) {
+      if (chunk.choices[0].delta.content) {
+        process.stdout.write(chunk.choices[0].delta.content);
+      }
+    }
+
+    return pullRequests;
   }
 }

@@ -1,4 +1,3 @@
-import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import OpenAI from 'openai';
 
@@ -9,14 +8,11 @@ import { PullRequest } from './structures/PullRequest';
 @Injectable()
 export class AiSummarizerService {
   private client: OpenAI;
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly promptService: PromptService,
-  ) {
+  constructor(private readonly promptService: PromptService) {
     this.initializeClient();
   }
 
-  async getAiSummary(pullRequests: PullRequest[]) {
+  async getAiSummary(pullRequests: PullRequest[], model: string) {
     const prompt = this.promptService.render(
       LLM_CONSTANTS.PROMPT_TEMPLATE_FILE,
       {
@@ -26,17 +22,18 @@ export class AiSummarizerService {
       },
     );
 
-    const response = await this.client.chat.completions.create({
-      model: 'openai/gpt-oss-120b',
+    const stream = await this.client.chat.completions.create({
+      model,
       messages: [{ role: 'user', content: prompt }],
+      stream: true,
     });
 
-    console.log(response.choices[0].message);
+    return stream;
   }
 
   private initializeClient() {
     this.client = new OpenAI({
-      apiKey: this.configService.get('GROQ_API_KEY'),
+      apiKey: 'ollama',
       baseURL: LLM_CONSTANTS.BASE_URL,
       maxRetries: LLM_CONSTANTS.MAX_RETRIES,
       timeout: LLM_CONSTANTS.TIMEOUT,
