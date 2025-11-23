@@ -15,7 +15,7 @@ export class SummaryController {
       username,
       orgName,
       startDate,
-      endDate: endDate || new Date().toISOString().split('T')[0],
+      endDate,
     });
 
     const stream = await this.summaryService.getAiSummary(pullRequests, model);

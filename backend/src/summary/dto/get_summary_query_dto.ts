@@ -1,9 +1,4 @@
-import {
-  IsDateString,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 
 export class GetSummaryQueryDto {
   @IsString()
@@ -23,6 +18,6 @@ export class GetSummaryQueryDto {
   model: string;
 
   @IsDateString()
-  @IsOptional()
-  endDate?: string;
+  @IsNotEmpty()
+  endDate: string;
 }

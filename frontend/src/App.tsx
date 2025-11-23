@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
+import { FilterCriteria } from "@/components/app/FilterCriteria";
 
 function App() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center bg-background text-foreground">
-      <Button>Click me</Button>
+    <div className="bg-background text-foreground">
+      <FilterCriteria />
     </div>
   );
 }
