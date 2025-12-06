@@ -1,4 +1,11 @@
-import { useMemo, useState } from "react";
+import {
+  useMemo,
+  useState,
+  useRef,
+  useEffect,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { format, formatDate } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import type { DateRange } from "react-day-picker";
@@ -13,36 +20,95 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { ApiEndpoints } from "@/lib/constants";
 
-export function FilterCriteria() {
+type FilterCriteriaProps = {
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+  setAiResponse: Dispatch<SetStateAction<string>>;
+};
+
+export function FilterCriteria({
+  loading,
+  setLoading,
+  setAiResponse,
+}: FilterCriteriaProps) {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [orgName, setOrgName] = useState("");
   const [model, setModel] = useState("");
   const [username, setUsername] = useState("");
+  const eventSourceRef = useRef<EventSource | null>(null);
 
   const isDisabled = useMemo(() => {
-    return !orgName || !model || !username || !dateRange?.from || !dateRange.to;
-  }, [orgName, model, username, dateRange]);
+    return (
+      loading ||
+      !orgName ||
+      !model ||
+      !username ||
+      !dateRange?.from ||
+      !dateRange.to
+    );
+  }, [orgName, model, username, dateRange, loading]);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  // Cleanup EventSource on unmount
+  useEffect(() => {
+    return () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+        eventSourceRef.current = null;
+      }
+    };
+  }, []);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const dateRange = formData.get("dateRange")?.toString().split(":");
-    if (!dateRange) {
-      // handle this with a toast
+
+    if (!dateRange || !dateRange.from || !dateRange.to) {
+      // TODO: Handle with toast
       return;
     }
 
-    const startDate = dateRange[0];
-    const endDate = dateRange[1];
+    // Close any existing EventSource connection
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
+    }
 
-    // TODO: Handle form submission
-    console.log("Form submitted:", {
-      orgName: formData.get("orgName"),
-      model: formData.get("model"),
-      username: formData.get("username"),
-      dateRange: formData.get("dateRange")?.toString().split(":"),
-    });
+    const startDate = formatDate(dateRange.from, "yyyy-MM-dd");
+    const endDate = formatDate(dateRange.to, "yyyy-MM-dd");
+
+    const params = new URLSearchParams();
+    params.append("username", username);
+    params.append("orgName", orgName);
+    params.append("startDate", startDate);
+    params.append("endDate", endDate);
+    params.append("model", model);
+
+    setLoading(true);
+
+    const sse = new EventSource(
+      ApiEndpoints.getPullRequests(params.toString())
+    );
+    eventSourceRef.current = sse;
+
+    sse.onerror = () => {
+      setLoading(false);
+      sse.close();
+      eventSourceRef.current = null;
+    };
+
+    sse.onmessage = (event) => handleAiResponse(event);
+  }
+
+  function handleAiResponse(event: MessageEvent) {
+    try {
+      const data = JSON.parse(event.data);
+      if (!data.content) return;
+
+      setAiResponse((prev: string) => prev + data.content);
+    } catch (error) {
+      console.error("Error parsing SSE data:", error);
+    }
   }
 
   return (
@@ -105,14 +171,7 @@ export function FilterCriteria() {
             name="dateRange"
             type="text"
             required
-            value={
-              dateRange?.from && dateRange?.to
-                ? `${formatDate(dateRange.from, "yyyy-MM-dd")}:${formatDate(
-                    dateRange.to,
-                    "yyyy-MM-dd"
-                  )}`
-                : ""
-            }
+            value={dateRange?.from && dateRange?.to ? "filled" : ""}
             className="hidden"
             readOnly
             tabIndex={-1}
@@ -148,7 +207,12 @@ export function FilterCriteria() {
       </div>
 
       <div className="flex justify-center">
-        <Button disabled={isDisabled} type="submit" size="lg">
+        <Button
+          className="cursor-pointer"
+          disabled={isDisabled}
+          type="submit"
+          size="lg"
+        >
           Search PRs
         </Button>
       </div>
