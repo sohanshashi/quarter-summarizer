@@ -7,7 +7,7 @@ import {
   type SetStateAction,
 } from "react";
 import { format, formatDate } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, StopCircleIcon } from "lucide-react";
 import type { DateRange } from "react-day-picker";
 
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import {
+  TooltipContent,
+  TooltipTrigger,
+  Tooltip,
+} from "@/components/ui/tooltip";
 import { ApiEndpoints } from "@/lib/constants";
+import { Spinner } from "@/components/ui/spinner";
 
 type FilterCriteriaProps = {
   loading: boolean;
@@ -85,6 +91,7 @@ export function FilterCriteria({
     params.append("model", model);
 
     setLoading(true);
+    setAiResponse("");
 
     const sse = new EventSource(
       ApiEndpoints.getPullRequests(params.toString())
@@ -92,9 +99,7 @@ export function FilterCriteria({
     eventSourceRef.current = sse;
 
     sse.onerror = () => {
-      setLoading(false);
-      sse.close();
-      eventSourceRef.current = null;
+      handleStop();
     };
 
     sse.onmessage = (event) => handleAiResponse(event);
@@ -109,6 +114,12 @@ export function FilterCriteria({
     } catch (error) {
       console.error("Error parsing SSE data:", error);
     }
+  }
+
+  function handleStop() {
+    setLoading(false);
+    eventSourceRef.current?.close();
+    eventSourceRef.current = null;
   }
 
   return (
@@ -206,15 +217,24 @@ export function FilterCriteria({
         </div>
       </div>
 
-      <div className="flex justify-center">
-        <Button
-          className="cursor-pointer"
-          disabled={isDisabled}
-          type="submit"
-          size="lg"
-        >
-          Search PRs
+      <div className="flex justify-center items-center space-x-2">
+        <Button disabled={isDisabled} type="submit" size="lg">
+          {loading && <Spinner />}
+          Get AI Summary
         </Button>
+
+        {loading && (
+          <Tooltip>
+            <TooltipTrigger>
+              <Button variant="secondary" size="icon" onClick={handleStop}>
+                <StopCircleIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Stop</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
       </div>
     </form>
   );
