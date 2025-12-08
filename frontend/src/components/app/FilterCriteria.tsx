@@ -24,7 +24,7 @@ import { ApiEndpoints } from "@/lib/constants";
 
 type FilterCriteriaProps = {
   loading: boolean;
-  setLoading: (loading: boolean) => void;
+  setLoading: Dispatch<SetStateAction<boolean>>;
   setAiResponse: Dispatch<SetStateAction<string>>;
 };
 

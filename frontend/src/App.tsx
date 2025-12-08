@@ -1,5 +1,7 @@
-import { FilterCriteria } from "@/components/app/FilterCriteria";
 import { useState } from "react";
+
+import { FilterCriteria } from "@/components/app/FilterCriteria";
+import { ResponseTextArea } from "./components/app/ResponseTextArea";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -13,7 +15,14 @@ function App() {
         setAiResponse={setAiResponse}
       />
 
-      <p>{aiResponse}</p>
+      {aiResponse.length > 0 && (
+        <div className="w-full px-6 py-4 space-y-2">
+          <h1 className="text-2xl font-bold">Your AI Summary</h1>
+          <div className="bg-gray-900 dark:bg-gray-950 rounded-sm border border-gray-800 dark:border-gray-700 shadow-lg">
+            <ResponseTextArea value={aiResponse} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
