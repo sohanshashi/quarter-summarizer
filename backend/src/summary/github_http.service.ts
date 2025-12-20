@@ -39,10 +39,31 @@ export class GithubHttpService {
   }
 
   public async getPullRequests(query: string) {
-    const response = await this.client.get(API_URLS.getIssues(query));
+    const perPage = 100;
+    let page = 1;
+    let hasMore = true;
+    let allPullRequests: PullRequest[] = [];
 
-    return (response.data as { items: ApiPullRequest[] }).items.map(
-      (item) => new PullRequest(item),
-    );
+    while (hasMore) {
+      const response = await this.client.get(
+        `${API_URLS.getIssues(query)}&per_page=${perPage}&page=${page}`,
+      );
+
+      const items = (response.data as { items: ApiPullRequest[] }).items;
+      allPullRequests = allPullRequests.concat(
+        items.map((item) => new PullRequest(item)),
+      );
+
+      const linkHeader = response.headers.link as string;
+      hasMore = linkHeader?.includes('rel="next"') && items.length === perPage;
+
+      if (allPullRequests.length >= 1000) {
+        break;
+      }
+
+      page++;
+    }
+
+    return allPullRequests;
   }
 }
