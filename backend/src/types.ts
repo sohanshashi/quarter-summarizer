@@ -5,12 +5,9 @@ export type GetSummaryParams = {
   endDate: string;
 };
 
-export type ApiPullRequest = {
+export type PullRequestData = {
   title: string;
-  closed_at: string;
-  pull_request: {
-    url: string;
-    merged_at: string;
-  };
-  body: string;
+  url?: string | null | undefined;
+  closedAt?: string | null | undefined;
+  mergedAt?: string | null | undefined;
 };

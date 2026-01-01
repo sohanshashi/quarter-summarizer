@@ -1,32 +1,44 @@
-import { ApiPullRequest } from 'src/types';
+import { PullRequestData } from 'src/types';
 
 export class PullRequest {
-  readonly title: string;
-  readonly url: string;
-  readonly #merged_at: string;
-  readonly #closed_at: string;
+  readonly #title: string;
+  readonly #url?: string | null | undefined;
+  readonly #mergedAt?: string | null | undefined;
+  readonly #closedAt?: string | null | undefined;
 
-  constructor(data: ApiPullRequest) {
-    this.title = data.title;
-    this.url = data.pull_request.url;
-    this.#merged_at = data.pull_request.merged_at;
-    this.#closed_at = data.closed_at;
+  constructor(data: PullRequestData) {
+    this.#title = data.title;
+    this.#url = data.url;
+    this.#mergedAt = data.mergedAt;
+    this.#closedAt = data.closedAt;
+  }
+
+  get title() {
+    return this.#title;
+  }
+
+  get url() {
+    return this.#url;
   }
 
   get mergedAt() {
-    return new Date(this.#merged_at);
+    if (!this.#mergedAt) return null;
+
+    return new Date(this.#mergedAt);
   }
 
   get closedAt() {
-    return new Date(this.#closed_at);
+    if (!this.#closedAt) return null;
+
+    return new Date(this.#closedAt);
   }
 
   toJSON() {
     return {
       title: this.title,
       url: this.url,
-      mergedAt: this.#merged_at,
-      closedAt: this.#closed_at,
+      mergedAt: this.mergedAt,
+      closedAt: this.closedAt,
     };
   }
 }
