@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 
 import { SummaryController } from './summary.controller';
-import { GithubHttpService } from './github_http.service';
+import { GithubHttpService } from './services/github_http.service';
 import { PromptService } from 'src/prompts/prompt.service';
-import { AiSummarizerService } from './ai_summarizer.service';
+import { AiSummarizerService } from './services/ai_summarizer.service';
 
 @Module({
   imports: [],

@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 
 import { GetSummaryQueryDto } from './dto/get_summary_query_dto';
 import { GetSummaryParams } from 'src/types';
-import { GithubHttpService } from './github_http.service';
-import { AiSummarizerService } from './ai_summarizer.service';
+import { GithubHttpService } from './services/github_http.service';
+import { AiSummarizerService } from './services/ai_summarizer.service';
 
 @Controller('summary')
 export class SummaryController {

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 
 import { API_URLS, GITHUB_CONSTANTS } from 'src/config/constants';
-import { PullRequest } from './structures/PullRequest';
+import { PullRequest } from '../structures/PullRequest';
 import { ApiPullRequest } from 'src/types';
 
 @Injectable()

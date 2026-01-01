@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 
 import { LLM_CONSTANTS } from 'src/config/constants';
 import { PromptService } from 'src/prompts/prompt.service';
-import { PullRequest } from './structures/PullRequest';
+import { PullRequest } from '../structures/PullRequest';
 
 @Injectable()
 export class AiSummarizerService {
