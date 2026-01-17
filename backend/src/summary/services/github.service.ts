@@ -28,7 +28,7 @@ export class GithubService {
         ...items.map((item) =>
           this.createApplicationPullRequest({
             title: item.title,
-            url: item.pull_request?.url,
+            url: item.html_url,
             closedAt: item.closed_at,
             mergedAt: item.pull_request?.merged_at,
           }),

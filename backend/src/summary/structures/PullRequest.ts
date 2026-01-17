@@ -2,7 +2,7 @@ import { PullRequestData } from 'src/types';
 
 export class PullRequest {
   readonly #title: string;
-  readonly #url?: string | null | undefined;
+  readonly #url: string;
   readonly #mergedAt?: string | null | undefined;
   readonly #closedAt?: string | null | undefined;
 

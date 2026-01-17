@@ -7,7 +7,7 @@ export type GetSummaryParams = {
 
 export type PullRequestData = {
   title: string;
-  url?: string | null | undefined;
+  url: string;
   closedAt?: string | null | undefined;
   mergedAt?: string | null | undefined;
 };
