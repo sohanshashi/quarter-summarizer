@@ -1,3 +1,5 @@
+import type { UsageCardData } from "./types";
+
 export const ApiEndpoints = Object.freeze({
   getPullRequests: (query: string) => `/api/summary?${query}`,
 });
@@ -59,3 +61,26 @@ export const editorTheme = {
     code: "bg-gray-800 px-1 py-0.5 rounded font-mono text-sm text-gray-100",
   },
 };
+
+export const usageCardData: UsageCardData[] = [
+  {
+    title: 'Enter Username',
+    description: 'Your GitHub Username',
+    iconUrl: '/icons/person.svg'
+  },
+  {
+    title: 'Organization Name',
+    description: 'Your company or organization',
+    iconUrl: '/icons/organization.svg'
+  },
+  {
+    title: 'Select Date Range',
+    description: 'Quarter or custom date range',
+    iconUrl: '/icons/date-range.svg'
+  },
+  {
+    title: 'Choose Model',
+    description: 'Select AI model for summary',
+    iconUrl: '/icons/ai-pen.svg'
+  }
+]
