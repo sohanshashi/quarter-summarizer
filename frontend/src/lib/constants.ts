@@ -84,3 +84,10 @@ export const usageCardData: UsageCardData[] = [
     iconUrl: '/icons/ai-pen.svg'
   }
 ]
+
+export const quarterToMonthRangeMapping = Object.freeze({
+  1: { start: "01-01", end: "03-31", label: "Jan - Mar" },
+  2: { start: "04-01", end: "06-30", label: "Apr - Jun" },
+  3: { start: "07-01", end: "09-30", label: "Jul - Sep" },
+  4: { start: "10-01", end: "12-31", label: "Oct - Dec" },
+})

@@ -3,3 +3,10 @@ export type UsageCardData = {
   description: string;
   iconUrl: string;
 }
+
+export type Quarter = {
+  label: string;
+  value: string;
+  startDate: string;
+  endDate: string;
+}
