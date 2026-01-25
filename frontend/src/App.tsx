@@ -1,13 +1,19 @@
-import { Hero } from "./components/app/Hero";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import { Navbar } from "./components/app/Navbar";
-import { Usage } from "./components/app/Usage";
+import { Home } from './pages/Home';
+import { Summary } from './pages/Summary';
 
 export function App() {
   return (
-    <div className="h-full">
-      <Navbar />
-      <Hero />
-      <Usage />
-    </div>
+    <BrowserRouter>
+      <div className="h-full">
+        <Navbar />
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/summary' element={<Summary />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }

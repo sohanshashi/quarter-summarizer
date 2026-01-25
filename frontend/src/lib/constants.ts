@@ -1,7 +1,7 @@
 import type { UsageCardData } from "./types";
 
 export const ApiEndpoints = Object.freeze({
-  getPullRequests: (query: string) => `/api/summary?${query}`,
+  generateSummary: (query: string) => `/api/summary?${query}`,
 });
 
 export const editorTheme = {
@@ -64,30 +64,30 @@ export const editorTheme = {
 
 export const usageCardData: UsageCardData[] = [
   {
-    title: 'Enter Username',
-    description: 'Your GitHub Username',
-    iconUrl: '/icons/person.svg'
+    title: "Enter Username",
+    description: "Your GitHub Username",
+    iconUrl: "/icons/person.svg",
   },
   {
-    title: 'Organization Name',
-    description: 'Your company or organization',
-    iconUrl: '/icons/organization.svg'
+    title: "Organization Name",
+    description: "Your company or organization",
+    iconUrl: "/icons/organization.svg",
   },
   {
-    title: 'Select Date Range',
-    description: 'Quarter or custom date range',
-    iconUrl: '/icons/date-range.svg'
+    title: "Select Date Range",
+    description: "Quarter or custom date range",
+    iconUrl: "/icons/date-range.svg",
   },
   {
-    title: 'Choose Model',
-    description: 'Select AI model for summary',
-    iconUrl: '/icons/ai-pen.svg'
-  }
-]
+    title: "Choose Model",
+    description: "Select AI model for summary",
+    iconUrl: "/icons/ai-pen.svg",
+  },
+];
 
 export const quarterToMonthRangeMapping = Object.freeze({
   1: { start: "01-01", end: "03-31", label: "Jan - Mar" },
   2: { start: "04-01", end: "06-30", label: "Apr - Jun" },
   3: { start: "07-01", end: "09-30", label: "Jul - Sep" },
   4: { start: "10-01", end: "12-31", label: "Oct - Dec" },
-})
+});

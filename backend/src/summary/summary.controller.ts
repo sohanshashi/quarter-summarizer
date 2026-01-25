@@ -39,6 +39,12 @@ export class SummaryController {
             }
           }
 
+          subscriber.next({
+            data: {
+              done: true,
+            },
+          } as MessageEvent);
+
           subscriber.complete();
         } catch (error) {
           subscriber.error(error);

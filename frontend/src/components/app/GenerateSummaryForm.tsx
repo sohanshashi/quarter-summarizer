@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -7,6 +8,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 import { getAvailableQuarters } from "@/lib/utils";
 
 export function GenerateSummaryForm() {
+  const navigate = useNavigate();
   const quarters = useMemo(() => getAvailableQuarters(), []);
 
   const [username, setUsername] = useState("");
@@ -21,15 +23,14 @@ export function GenerateSummaryForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement form submission logic
-    console.log({
-      username,
-      organization,
-      selectedQuarter,
-      useCustomDates,
-      startDate,
-      endDate,
-      aiModel,
+    navigate('/summary', {
+      state: {
+        username,
+        organization: organization || null,
+        startDate: useCustomDates ? startDate : selectedQuarter.startDate,
+        endDate: useCustomDates ? endDate : selectedQuarter.endDate,
+        model: aiModel,
+      }
     });
   };
 
