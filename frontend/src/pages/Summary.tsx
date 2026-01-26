@@ -2,24 +2,25 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Spinner } from '@/components/ui/spinner';
+import { SummaryHeader } from '@/components/app/SummaryHeader';
 import type { SummaryState } from '@/lib/types';
 import { ApiEndpoints } from '@/lib/constants';
+import { ResponseTextArea } from '@/components/app/ResponseTextArea';
 
 export function Summary() {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [summary, setSummary] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const eventSourceRef = useRef<EventSource | null>(null)
 
   const state = location.state as SummaryState | null;
-  const isValidState = state?.username && state.startDate && state.endDate && state.model
+  const isValidState = state?.username && state.startDate && state.endDate && state.model && [true, false].includes(state.useCustomDates) && state.selectedQuarter
 
   const handleEventSourceCleanup = () => {
-    setIsLoading(false)
     eventSourceRef.current?.close()
     eventSourceRef.current = null
   }
@@ -29,21 +30,24 @@ export function Summary() {
       const data = JSON.parse(event.data);
       if (data.done) {
         handleEventSourceCleanup()
+        setIsGenerating(false)
         return
       }
 
       if (data.content) {
         setSummary((prev) => prev + data.content);
-        setIsLoading(false);
+        setIsGenerating(true);
       }
     } catch (err) {
       console.error('Error parsing SSE data:', err);
       handleEventSourceCleanup()
+      setIsGenerating(false)
     }
   }, [])
 
   const handleEventSourceError = useCallback((event: Event) => {
     handleEventSourceCleanup()
+    setIsGenerating(false)
     setError('Failed to generate summary. Please try again.');
     console.error(event)
   }, [])
@@ -78,6 +82,11 @@ export function Summary() {
     // the functions are stable
   }, [isValidState, state, handleEventSourceError, handleEventSourceMessage, navigate]);
 
+  if (!isValidState) {
+    navigate('/')
+    return
+  }
+
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -96,59 +105,26 @@ export function Summary() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-3">Your AI Summary</h1>
-        <div className="text-muted-foreground">
-          <p>
-            Generated for <span className="font-medium text-foreground">{state?.username}</span>
-            {state?.organization && (
-              <> at <span className="font-medium text-foreground">{state.organization}</span></>
-            )}
-          </p>
-          <p className="text-sm mt-1">
-            {state?.startDate} to {state?.endDate} • Model: {state?.model}
-          </p>
-        </div>
-      </div>
-
-      <div className="bg-card rounded-lg shadow-lg border p-8 min-h-[500px]">
-        {isLoading && !summary && (
-          <div className="flex flex-col items-center justify-center h-64 space-y-4">
+    <div className="container mx-auto py-8 max-w-4xl">
+      <SummaryHeader
+        {...state}
+      />
+      <div className='min-h-[500px] flex flex-col'>
+        {!isGenerating && !summary.length ? (
+          <div className='bg-grey rounded-lg p-5 flex gap-2 flex-1 justify-center items-center text-white text-center'>
             <Spinner />
-            <div className="text-center">
-              <p className="text-lg font-medium">Generating your summary...</p>
-              <p className="text-sm text-muted-foreground mt-2">
-                This may take a minute while we analyze your pull requests
-              </p>
-            </div>
+            <p>Generating your summary</p>
           </div>
-        )}
-
-        {summary && (
-          <div className="prose prose-lg max-w-none dark:prose-invert text-black">
-            <div className="whitespace-pre-wrap font-sans leading-relaxed">
-              {summary}
-            </div>
-          </div>
-        )}
-
-        {isLoading && summary && (
-          <div className="mt-6 flex items-center justify-center text-sm text-muted-foreground">
-            <Spinner size="sm" />
-            <span className="ml-2">Streaming content...</span>
-          </div>
-        )}
+        ) : <ResponseTextArea value={summary} />}
       </div>
-
       <div className="mt-8 flex gap-4">
         <button
           onClick={() => navigate('/')}
-          className="px-6 py-2.5 bg-[#E07856] text-white rounded-md hover:bg-[#E07856]/90 transition-colors font-medium"
+          className="px-6 py-2.5 bg-primary rounded-md hover:bg-primary/90 transition-colors font-medium"
         >
           Generate Another Summary
         </button>
-        {summary && !isLoading && (
+        {summary && !isGenerating && (
           <button
             onClick={() => {
               navigator.clipboard.writeText(summary);

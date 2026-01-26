@@ -91,3 +91,6 @@ export const quarterToMonthRangeMapping = Object.freeze({
   3: { start: "07-01", end: "09-30", label: "Jul - Sep" },
   4: { start: "10-01", end: "12-31", label: "Oct - Dec" },
 });
+
+export const projectGithubRepoLink =
+  "https://github.com/sohanshashi/quarter-summarizer";

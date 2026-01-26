@@ -61,14 +61,16 @@ export function ResponseTextArea({ value }: EditorProps) {
   };
 
   return (
-    <LexicalComposer initialConfig={initialConfig}>
-      <RichTextPlugin
-        contentEditable={
-          <ContentEditable className="p-6 text-gray-100 focus:outline-none" />
-        }
-        ErrorBoundary={LexicalErrorBoundary}
-      />
-      <ReadOnlyPlugin value={value} />
-    </LexicalComposer>
+    <div className="bg-grey rounded-lg p-5 min-h-[500px]">
+      <LexicalComposer initialConfig={initialConfig}>
+        <RichTextPlugin
+          contentEditable={
+            <ContentEditable className="focus:outline-none prose prose-lg max-w-none dark:prose-invert" />
+          }
+          ErrorBoundary={LexicalErrorBoundary}
+        />
+        <ReadOnlyPlugin value={value} />
+      </LexicalComposer>
+    </div>
   );
 }

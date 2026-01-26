@@ -17,4 +17,6 @@ export type SummaryState = {
   startDate: string;
   endDate: string;
   model: string;
+  useCustomDates: boolean;
+  selectedQuarter: Quarter;
 };

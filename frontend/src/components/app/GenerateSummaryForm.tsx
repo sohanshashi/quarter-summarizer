@@ -30,6 +30,8 @@ export function GenerateSummaryForm() {
         startDate: useCustomDates ? startDate : selectedQuarter.startDate,
         endDate: useCustomDates ? endDate : selectedQuarter.endDate,
         model: aiModel,
+        useCustomDates,
+        selectedQuarter
       }
     });
   };
@@ -92,7 +94,7 @@ export function GenerateSummaryForm() {
               value={selectedQuarterIndex}
               onChange={(e) => setSelectedQuarterIndex(Number(e.target.value))}
               disabled={useCustomDates}
-              className="cursor-pointer h-9 w-full rounded-md border border-input bg-transparent pl-3 pr-10 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 appearance-none"
+              className="cursor-pointer h-9 w-full rounded-md border border-input bg-transparent pl-3 pr-10 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-50 appearance-none"
             >
               {quarters.map((quarter, index) => (
                 <option key={quarter.value} value={index}>
@@ -112,7 +114,7 @@ export function GenerateSummaryForm() {
               <button
                 type="button"
                 onClick={() => setUseCustomDates(!useCustomDates)}
-                className="text-sm text-[#E07856] hover:text-[#E07856]/80 font-medium whitespace-nowrap"
+                className="text-sm text-primary hover:text-primary/80 font-medium whitespace-nowrap"
               >
                 {useCustomDates ? 'Quarterly Range' : 'Custom Range'}
               </button>
@@ -185,7 +187,7 @@ export function GenerateSummaryForm() {
       <div className="pt-2">
         <Button
           type="submit"
-          className="w-full bg-[#E07856] hover:bg-[#E07856]/90 text-white h-11 text-base font-medium"
+          className="w-full bg-primary hover:bg-primary/90 text-white h-11 text-base font-medium"
         >
           Generate Summary
         </Button>
