@@ -1,7 +1,11 @@
 import type { UsageCardData } from "./types";
 
+const githubApiBaseUrl = "https://api.github.com";
+
 export const ApiEndpoints = Object.freeze({
   generateSummary: (query: string) => `/api/summary?${query}`,
+  githubPublicProfile: (username: string) =>
+    `${githubApiBaseUrl}/users/${username}`,
 });
 
 export const editorTheme = {

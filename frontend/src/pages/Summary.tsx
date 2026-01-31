@@ -105,11 +105,11 @@ export function Summary() {
   }
 
   return (
-    <div className="container mx-auto py-8 max-w-4xl">
+    <div className="container mx-auto py-8 max-w-5xl">
       <SummaryHeader
         {...state}
       />
-      <div className='min-h-[500px] flex flex-col'>
+      <div className='min-h-[600px] flex flex-col'>
         {!isGenerating && !summary.length ? (
           <div className='bg-grey rounded-lg p-5 flex gap-2 flex-1 justify-center items-center text-white text-center'>
             <Spinner />
@@ -117,26 +117,16 @@ export function Summary() {
           </div>
         ) : <ResponseTextArea value={summary} />}
       </div>
-      <div className="mt-8 flex gap-4">
-        <button
-          onClick={() => navigate('/')}
-          className="px-6 py-2.5 bg-primary rounded-md hover:bg-primary/90 transition-colors font-medium"
-        >
-          Generate Another Summary
-        </button>
-        {summary && !isGenerating && (
+      {summary && !isGenerating && (
+        <div className="mt-4">
           <button
-            onClick={() => {
-              navigator.clipboard.writeText(summary);
-              // You could add a toast notification here
-              alert('Summary copied to clipboard!');
-            }}
-            className="px-6 py-2.5 border border-input rounded-md hover:bg-accent transition-colors font-medium"
+            onClick={() => navigate('/')}
+            className="px-6 py-2.5 bg-primary rounded-md hover:bg-primary/90 transition-colors font-medium"
           >
-            Copy to Clipboard
+            Generate Another Summary
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
