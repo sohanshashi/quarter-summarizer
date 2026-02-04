@@ -1,8 +1,10 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { lazy } from "react";
 
 import { Navbar } from "./components/app/Navbar";
-import { Home } from './pages/Home';
-import { Summary } from './pages/Summary';
+import { Home } from "./pages/Home";
+
+const Summary = lazy(() => import("./pages/Summary"));
 
 export function App() {
   return (
@@ -10,8 +12,8 @@ export function App() {
       <div className="h-full">
         <Navbar />
         <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/summary' element={<Summary />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/summary" element={<Summary />} />
         </Routes>
       </div>
     </BrowserRouter>
