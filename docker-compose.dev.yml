@@ -35,6 +35,7 @@ services:
     environment:
       - OLLAMA_BASE_URL=http://host.docker.internal:11434
       - PORT=3001
+      - NODE_ENV=development
     volumes:
       - ./backend/src:/app/src
       - ./backend/tsconfig.json:/app/tsconfig.json
