@@ -1,10 +1,15 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { CalendarRangeIcon, Undo2Icon } from "lucide-react";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 import { getAvailableQuarters } from "@/lib/utils";
 
 export function GenerateSummaryForm() {
@@ -13,7 +18,9 @@ export function GenerateSummaryForm() {
 
   const [username, setUsername] = useState("");
   const [organization, setOrganization] = useState("");
-  const [selectedQuarterIndex, setSelectedQuarterIndex] = useState(quarters.length - 1);
+  const [selectedQuarterIndex, setSelectedQuarterIndex] = useState(
+    quarters.length - 1,
+  );
   const [useCustomDates, setUseCustomDates] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -23,7 +30,7 @@ export function GenerateSummaryForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate('/summary', {
+    navigate("/summary", {
       state: {
         username,
         organization: organization || null,
@@ -31,8 +38,8 @@ export function GenerateSummaryForm() {
         endDate: useCustomDates ? endDate : selectedQuarter.endDate,
         model: aiModel,
         useCustomDates,
-        selectedQuarter
-      }
+        selectedQuarter,
+      },
     });
   };
 
@@ -53,7 +60,7 @@ export function GenerateSummaryForm() {
           <Input
             id="username"
             type="text"
-            placeholder="e.g., octocat"
+            placeholder="Eg: octocat"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="pr-10"
@@ -77,7 +84,7 @@ export function GenerateSummaryForm() {
         <Input
           id="organization"
           type="text"
-          placeholder="e.g., discord"
+          placeholder="Eg: discord"
           value={organization}
           onChange={(e) => setOrganization(e.target.value)}
         />
@@ -87,8 +94,8 @@ export function GenerateSummaryForm() {
         <Label htmlFor="quarter" className="text-sm font-medium">
           Date Range
         </Label>
-        <div className="flex items-center gap-3">
-          <div className="relative flex-1">
+        <div className="flex items-center gap-4">
+          <div className="relative w-64">
             <select
               id="quarter"
               value={selectedQuarterIndex}
@@ -102,27 +109,42 @@ export function GenerateSummaryForm() {
                 </option>
               ))}
             </select>
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <div
+              className={`absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none ${useCustomDates && "text-muted-foreground"}`}
+            >
+              <svg
+                width="12"
+                height="8"
+                viewBox="0 0 12 8"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M1 1L6 6L11 1"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </div>
           </div>
-          <span className="text-muted-foreground text-sm">OR</span>
+          {!useCustomDates && (
+            <span className="text-sm text-muted-foreground">OR</span>
+          )}
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 type="button"
                 onClick={() => setUseCustomDates(!useCustomDates)}
-                className="text-sm text-primary hover:text-primary/80 font-medium whitespace-nowrap"
               >
-                {useCustomDates ? 'Quarterly Range' : 'Custom Range'}
+                {useCustomDates ? <Undo2Icon /> : <CalendarRangeIcon />}
               </button>
             </TooltipTrigger>
             <TooltipContent>
               {useCustomDates
-                ? 'Switch back to quarterly date ranges'
-                : 'Use custom start and end dates'}
+                ? "Switch back to quarterly date ranges"
+                : "Use custom start and end dates"}
             </TooltipContent>
           </Tooltip>
         </div>
@@ -130,7 +152,10 @@ export function GenerateSummaryForm() {
         {useCustomDates && (
           <div className="grid grid-cols-2 gap-3 mt-3">
             <div>
-              <Label htmlFor="startDate" className="text-xs text-muted-foreground mb-1">
+              <Label
+                htmlFor="startDate"
+                className="text-xs text-muted-foreground mb-1"
+              >
                 Start Date
               </Label>
               <Input
@@ -147,7 +172,10 @@ export function GenerateSummaryForm() {
               />
             </div>
             <div>
-              <Label htmlFor="endDate" className="text-xs text-muted-foreground mb-1">
+              <Label
+                htmlFor="endDate"
+                className="text-xs text-muted-foreground mb-1"
+              >
                 End Date
               </Label>
               <Input
@@ -191,7 +219,7 @@ export function GenerateSummaryForm() {
         >
           Generate Summary
         </Button>
-        <p className="text-xs text-center text-muted-foreground mt-3">
+        <p className="text-xs text-center font-bold text-muted-foreground mt-3">
           This will analyze your merged pull requests and create a summary
         </p>
       </div>
