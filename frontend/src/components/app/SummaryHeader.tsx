@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { SummaryState } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
@@ -18,13 +18,15 @@ export function SummaryHeader({
     ? `${startDate} - ${endDate}`
     : selectedQuarter.label;
 
-  const fetchGithubProfile = useCallback(
-    async (signal: AbortSignal) => {
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function fetchGithubProfile() {
       try {
         const response = await fetch(
           ApiEndpoints.githubPublicProfile(username),
           {
-            signal,
+            signal: controller.signal,
           },
         );
 
@@ -40,21 +42,17 @@ export function SummaryHeader({
       } catch (err) {
         console.error(err);
       }
-    },
-    [username],
-  );
+    }
 
-  useEffect(() => {
-    const controller = new AbortController();
-    fetchGithubProfile(controller.signal);
+    fetchGithubProfile();
 
     return () => controller.abort();
-  }, [fetchGithubProfile]);
+  }, [username]);
 
   return (
     <div className="mb-8">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold ">Your Performance Summary</h1>
+        <h1 className="text-3xl font-bold ">Performance Summary</h1>
         {profilePictureUrl && (
           <a
             href={`https://github.com/${username}`}

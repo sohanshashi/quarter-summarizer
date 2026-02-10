@@ -100,7 +100,7 @@ export function ResponseTextArea({ value }: EditorProps) {
     <div
       ref={containerRef}
       onScroll={handleScroll}
-      className="bg-grey rounded-lg p-5 min-h-[600px] max-h-[600px] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500 relative"
+      className="bg-grey rounded-md p-5 min-h-[600px] max-h-[600px] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500 relative"
     >
       <button
         onClick={handleCopy}
