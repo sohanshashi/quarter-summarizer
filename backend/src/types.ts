@@ -10,4 +10,5 @@ export type PullRequestData = {
   url: string;
   closedAt?: string | null | undefined;
   mergedAt?: string | null | undefined;
+  body?: string | undefined;
 };

@@ -31,6 +31,7 @@ export class GithubService {
             url: item.html_url,
             closedAt: item.closed_at,
             mergedAt: item.pull_request?.merged_at,
+            body: item.body,
           }),
         ),
       );
