@@ -26,6 +26,16 @@ export function GenerateSummaryForm() {
   const [endDate, setEndDate] = useState("");
   const [aiModel, setAiModel] = useState("");
 
+  const isSubmitButtonDisabled = useMemo(() => {
+    if (username.length <= 0) return true;
+
+    if (useCustomDates && (startDate.length <= 0 || endDate.length <= 0)) {
+      return true;
+    }
+
+    return false;
+  }, [endDate, startDate, useCustomDates, username]);
+
   const selectedQuarter = quarters[selectedQuarterIndex];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -53,8 +63,8 @@ export function GenerateSummaryForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="username" className="text-sm font-medium">
-          GitHub Username
+        <Label htmlFor="username" className="text-sm font-medium gap-0.5">
+          GitHub Username<span className="text-red-500">*</span>
         </Label>
         <div className="relative">
           <Input
@@ -216,6 +226,7 @@ export function GenerateSummaryForm() {
         <Button
           type="submit"
           className="w-full bg-primary hover:bg-primary/90 text-white h-11 text-base font-medium"
+          disabled={isSubmitButtonDisabled}
         >
           Generate Summary
         </Button>
