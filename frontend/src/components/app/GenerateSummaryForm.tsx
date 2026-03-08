@@ -27,14 +27,14 @@ export function GenerateSummaryForm() {
   const [aiModel, setAiModel] = useState("");
 
   const isSubmitButtonDisabled = useMemo(() => {
-    if (username.length <= 0) return true;
+    if (username.length <= 0 || organization.length <= 0) return true;
 
     if (useCustomDates && (startDate.length <= 0 || endDate.length <= 0)) {
       return true;
     }
 
     return false;
-  }, [endDate, startDate, useCustomDates, username]);
+  }, [endDate, startDate, useCustomDates, username, organization]);
 
   const selectedQuarter = quarters[selectedQuarterIndex];
 
@@ -85,12 +85,9 @@ export function GenerateSummaryForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="organization" className="text-sm font-medium">
-          Organization Name
+        <Label htmlFor="organization" className="text-sm font-medium gap-0.5">
+          Github Organization<span className="text-red-500">*</span>
         </Label>
-        <p className="text-xs text-muted-foreground">
-          Leave blank for personal repositories
-        </p>
         <Input
           id="organization"
           type="text"
@@ -209,13 +206,10 @@ export function GenerateSummaryForm() {
         <Label htmlFor="model" className="text-sm font-medium">
           AI Model
         </Label>
-        <p className="text-xs text-muted-foreground">
-          e.g., claude-sonnet-4.5, gpt-4o, gemini-pro
-        </p>
         <Input
           id="model"
           type="text"
-          placeholder="Enter AI model name"
+          placeholder="Eg: claude-sonnet-4.5, gpt-4o, gemini-pro"
           value={aiModel}
           onChange={(e) => setAiModel(e.target.value)}
           required
