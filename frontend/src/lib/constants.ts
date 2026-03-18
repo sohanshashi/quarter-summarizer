@@ -69,23 +69,23 @@ export const editorTheme = {
 
 export const usageCardData: UsageCardData[] = [
   {
-    title: "Enter Username",
-    description: "Your GitHub Username",
+    title: "GitHub Username",
+    description: "We'll fetch your merged PRs from this account",
     iconUrl: "/icons/person.svg",
   },
   {
-    title: "Organization Name",
-    description: "Your company or organization",
+    title: "Organization",
+    description: "We'll filter PRs to repos within this org",
     iconUrl: "/icons/organization.svg",
   },
   {
-    title: "Select Date Range",
-    description: "Quarter or custom date range",
+    title: "Date Range",
+    description: "We'll analyze contributions from this period",
     iconUrl: "/icons/date-range.svg",
   },
   {
-    title: "Choose Model",
-    description: "Select AI model for summary",
+    title: "AI Model",
+    description: "We'll use this model to write your summary",
     iconUrl: "/icons/ai-pen.svg",
   },
 ];

@@ -95,7 +95,7 @@ export function GenerateSummaryForm({
 
       <div className="space-y-2">
         <Label htmlFor="organization" className="text-sm font-medium gap-0.5">
-          Github Organization<span className="text-red-500">*</span>
+          GitHub Organization<span className="text-red-500">*</span>
         </Label>
         <Input
           id="organization"
