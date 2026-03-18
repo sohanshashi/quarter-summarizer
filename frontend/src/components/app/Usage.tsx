@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { usageCardData, ApiEndpoints } from "@/lib/constants";
 import { UsageCard } from "./UsageCard";
@@ -7,7 +8,19 @@ import { GenerateSummaryForm } from "./GenerateSummaryForm";
 import type { AvailableModel } from "@/lib/types";
 
 export function Usage() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [availableModels, setAvailableModels] = useState<string[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const locationState = location.state as { openGetStartedDialog?: boolean } | null;
+
+  useEffect(() => {
+    if (locationState?.openGetStartedDialog) {
+      setDialogOpen(true);
+      navigate("/", { replace: true }); // trick: avoid page refresh from opening dialog when already opened
+    }
+  }, [locationState?.openGetStartedDialog, navigate]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -40,7 +53,7 @@ export function Usage() {
         ))}
       </div>
       <div className="mt-8 flex justify-center items-center">
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <button className="px-[16px] py-[10px] bg-primary rounded-[10px] hover:bg-primary/90">
               Get Started

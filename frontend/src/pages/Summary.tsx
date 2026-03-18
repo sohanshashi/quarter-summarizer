@@ -136,7 +136,7 @@ export default function Summary() {
       </div>
       {summary && !isGenerating && (
         <div className="mt-4 flex gap-4 items-center">
-          <Button onClick={() => navigate("/")}>
+          <Button onClick={() => navigate("/", { state: { openGetStartedDialog: true } })}>
             <RedoIcon data-icon="inline-start" /> Generate Another
           </Button>
 
