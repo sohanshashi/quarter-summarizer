@@ -60,13 +60,13 @@ export class SummaryController {
   }
 
   @Get('pull_requests')
-  async getPullRequests() {
-    // const { username, orgName, model, startDate, endDate } = query;
+  async getPullRequests(@Query() query: GetSummaryQueryDto) {
+    const { username, orgName, model, startDate, endDate } = query;
     const filter = this.getFilterQuery({
-      username: 'sohanshashi',
-      orgName: 'interviewstreet',
-      startDate: '2026-02-25',
-      endDate: '2026-03-10',
+      username,
+      orgName,
+      startDate,
+      endDate,
     });
 
     const pullRequests = await this.githubService.getPullRequests(filter);
