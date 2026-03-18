@@ -4,6 +4,7 @@ const githubApiBaseUrl = "https://api.github.com";
 
 export const ApiEndpoints = Object.freeze({
   generateSummary: (query: string) => `/api/summary?${query}`,
+  availableModels: () => "/api/summary/available_models",
   githubPublicProfile: (username: string) =>
     `${githubApiBaseUrl}/users/${username}`,
 });

@@ -40,7 +40,7 @@ export function SummaryHeader({
           setProfilePictureUrl(profileData.avatar_url);
         }
       } catch (err) {
-        console.error(err);
+        console.error("Failed to fetch github profile:", err);
       }
     }
 

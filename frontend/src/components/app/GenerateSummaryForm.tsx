@@ -12,7 +12,13 @@ import {
 } from "@/components/ui/tooltip";
 import { getAvailableQuarters } from "@/lib/utils";
 
-export function GenerateSummaryForm() {
+type GenerateSummaryFormProps = {
+  availableModels: string[];
+};
+
+export function GenerateSummaryForm({
+  availableModels = [],
+}: GenerateSummaryFormProps) {
   const navigate = useNavigate();
   const quarters = useMemo(() => getAvailableQuarters(), []);
 
@@ -24,17 +30,20 @@ export function GenerateSummaryForm() {
   const [useCustomDates, setUseCustomDates] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [aiModel, setAiModel] = useState("");
+  const [aiModel, setAiModel] = useState(
+    availableModels.length > 0 ? availableModels[0] : "",
+  );
 
   const isSubmitButtonDisabled = useMemo(() => {
-    if (username.length <= 0 || organization.length <= 0) return true;
+    if (username.length <= 0 || organization.length <= 0 || aiModel.length <= 0)
+      return true;
 
     if (useCustomDates && (startDate.length <= 0 || endDate.length <= 0)) {
       return true;
     }
 
     return false;
-  }, [endDate, startDate, useCustomDates, username, organization]);
+  }, [endDate, startDate, useCustomDates, username, organization, aiModel]);
 
   const selectedQuarter = quarters[selectedQuarterIndex];
 
@@ -206,14 +215,49 @@ export function GenerateSummaryForm() {
         <Label htmlFor="model" className="text-sm font-medium">
           AI Model
         </Label>
-        <Input
-          id="model"
-          type="text"
-          placeholder="Eg: claude-sonnet-4.5, gpt-4o, gemini-pro"
-          value={aiModel}
-          onChange={(e) => setAiModel(e.target.value)}
-          required
-        />
+        {availableModels.length > 0 ? (
+          <div className="relative w-full">
+            <select
+              id="model"
+              value={aiModel}
+              onChange={(e) => setAiModel(e.target.value)}
+              required
+              className="cursor-pointer h-9 w-full rounded-md border border-input bg-transparent pl-3 pr-10 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-50 appearance-none"
+            >
+              {availableModels.map((model) => (
+                <option key={model} value={model}>
+                  {model}
+                </option>
+              ))}
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+              <svg
+                width="12"
+                height="8"
+                viewBox="0 0 12 8"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M1 1L6 6L11 1"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+        ) : (
+          <Input
+            id="model"
+            type="text"
+            placeholder="Eg: claude-sonnet-4.5, gpt-4o, gemini-pro"
+            value={aiModel}
+            onChange={(e) => setAiModel(e.target.value)}
+            required
+          />
+        )}
       </div>
 
       <div className="pt-2">

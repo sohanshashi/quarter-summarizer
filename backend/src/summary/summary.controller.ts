@@ -53,14 +53,20 @@ export class SummaryController {
     });
   }
 
+  @Get('available_models')
+  async getAvailableModels() {
+    const models = await this.aiService.getAvailableModels();
+    return { data: models.filter((modelData) => modelData.object === 'model') };
+  }
+
   @Get('pull_requests')
-  async getPullRequests(@Query() query: GetSummaryQueryDto) {
-    const { username, orgName, model, startDate, endDate } = query;
+  async getPullRequests() {
+    // const { username, orgName, model, startDate, endDate } = query;
     const filter = this.getFilterQuery({
-      username,
-      orgName,
-      startDate,
-      endDate,
+      username: 'sohanshashi',
+      orgName: 'interviewstreet',
+      startDate: '2026-02-25',
+      endDate: '2026-03-10',
     });
 
     const pullRequests = await this.githubService.getPullRequests(filter);

@@ -1,3 +1,10 @@
+export type AvailableModel = {
+  id: string;
+  created: number;
+  object: string;
+  owned_by: string;
+};
+
 export type UsageCardData = {
   title: string;
   description: string;

@@ -12,6 +12,11 @@ export class AiSummarizerService {
     this.initializeClient();
   }
 
+  async getAvailableModels() {
+    const response = await this.client.models.list();
+    return response.data;
+  }
+
   async getAiSummary(pullRequests: PullRequest[], model: string) {
     const prompt = this.promptService.render(
       LLM_CONSTANTS.PROMPT_TEMPLATE_FILE,

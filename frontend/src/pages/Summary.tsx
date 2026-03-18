@@ -137,11 +137,11 @@ export default function Summary() {
       {summary && !isGenerating && (
         <div className="mt-4 flex gap-4 items-center">
           <Button onClick={() => navigate("/")}>
-            <RedoIcon data-icon="inline-start" /> Generate Another Summary
+            <RedoIcon data-icon="inline-start" /> Generate Another
           </Button>
 
           <Button className="bg-grey hover:bg-grey/80">
-            <EyeIcon data-icon="inline-start" /> View PRs
+            <EyeIcon data-icon="inline-start" /> View Analyzed PRs
           </Button>
         </div>
       )}

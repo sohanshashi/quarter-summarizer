@@ -1,13 +1,36 @@
-import { usageCardData } from "@/lib/constants";
+import { useEffect, useState } from "react";
+
+import { usageCardData, ApiEndpoints } from "@/lib/constants";
 import { UsageCard } from "./UsageCard";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { GenerateSummaryForm } from "./GenerateSummaryForm";
+import type { AvailableModel } from "@/lib/types";
 
 export function Usage() {
+  const [availableModels, setAvailableModels] = useState<string[]>([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function fetchAvailableModels() {
+      try {
+        const response = await fetch(ApiEndpoints.availableModels());
+        if (!response.ok) return;
+
+        const { data } = await response.json();
+        setAvailableModels(
+          data.map((modelData: AvailableModel) => modelData.id),
+        );
+      } catch (err) {
+        console.error("Failed to fetch available models:", err);
+      }
+    }
+
+    fetchAvailableModels();
+
+    return () => controller.abort();
+  }, []);
+
   return (
     <div className="mt-4 mb-6">
       <h1 className="text-[28px] font-bold text-center">How it works</h1>
@@ -24,7 +47,7 @@ export function Usage() {
             </button>
           </DialogTrigger>
           <DialogContent className="max-w-[600px]">
-            <GenerateSummaryForm />
+            <GenerateSummaryForm availableModels={availableModels} />
           </DialogContent>
         </Dialog>
       </div>
