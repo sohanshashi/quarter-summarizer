@@ -3,15 +3,15 @@ import { PullRequestData } from 'src/types';
 export class PullRequest {
   readonly #title: string;
   readonly #url: string;
-  readonly #mergedAt?: string | null | undefined;
-  readonly #closedAt?: string | null | undefined;
-  readonly #body?: string | undefined;
+  readonly #mergedAt: string | null | undefined;
+  readonly #createdAt: string;
+  readonly #body: string | null | undefined;
 
   constructor(data: PullRequestData) {
     this.#title = data.title;
     this.#url = data.url;
     this.#mergedAt = data.mergedAt;
-    this.#closedAt = data.closedAt;
+    this.#createdAt = data.createdAt;
     this.#body = data.body;
   }
 
@@ -29,13 +29,13 @@ export class PullRequest {
     return new Date(this.#mergedAt);
   }
 
-  get closedAt() {
-    if (!this.#closedAt) return null;
-
-    return new Date(this.#closedAt);
+  get createdAt() {
+    return new Date(this.#createdAt);
   }
 
   get body() {
+    if (!this.#body) return null;
+
     return this.#body;
   }
 
@@ -44,7 +44,7 @@ export class PullRequest {
       title: this.title,
       url: this.url,
       mergedAt: this.mergedAt,
-      closedAt: this.closedAt,
+      createdAt: this.createdAt,
       body: this.body,
     };
   }

@@ -29,7 +29,7 @@ export class GithubService {
           this.createApplicationPullRequest({
             title: item.title,
             url: item.html_url,
-            closedAt: item.closed_at,
+            createdAt: item.created_at,
             mergedAt: item.pull_request?.merged_at,
             body: item.body,
           }),
