@@ -29,6 +29,12 @@ export class SummaryController {
           const pullRequests = await this.githubService.getPullRequests(filter);
           const stream = await this.aiService.getAiSummary(pullRequests, model);
 
+          subscriber.next({
+            data: {
+              pullRequests,
+            },
+          } as MessageEvent);
+
           for await (const chunk of stream) {
             if (chunk.choices[0].delta.content) {
               subscriber.next({
