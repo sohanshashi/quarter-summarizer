@@ -19,9 +19,10 @@ FROM base AS builder
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
-RUN npm install
+RUN npm ci
 
 COPY . .
+
 RUN npm run build
 
 # Production stage - serves static files with nginx
