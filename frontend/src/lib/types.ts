@@ -27,3 +27,11 @@ export type SummaryState = {
   useCustomDates: boolean;
   selectedQuarter: Quarter;
 };
+
+export type PullRequestApiData = {
+  title: string;
+  url: string;
+  mergedAt: Date | null;
+  createdAt: Date;
+  body: string | null;
+};

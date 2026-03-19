@@ -4,7 +4,8 @@ import { RedoIcon, EyeIcon } from "lucide-react";
 
 import { Spinner } from "@/components/ui/spinner";
 import { SummaryHeader } from "@/components/app/SummaryHeader";
-import type { SummaryState } from "@/lib/types";
+import { PullRequestsTable } from "@/components/app/PullRequestsTable";
+import type { PullRequestApiData, SummaryState } from "@/lib/types";
 import { ApiEndpoints } from "@/lib/constants";
 import { ResponseTextArea } from "@/components/app/ResponseTextArea";
 import { Button } from "@/components/ui/button";
@@ -15,9 +16,12 @@ export default function Summary() {
 
   const [summary, setSummary] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showAnalyzedPrs, setShowAnalyzedPrs] = useState(false);
+  const [analyzedPrs, setAnalyzedPrs] = useState<PullRequestApiData[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const eventSourceRef = useRef<EventSource | null>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   const state = location.state as SummaryState | null;
   const isValidState =
@@ -39,6 +43,11 @@ export default function Summary() {
       if (data.done) {
         handleEventSourceCleanup();
         setIsGenerating(false);
+        return;
+      }
+
+      if (data.pullRequests) {
+        setAnalyzedPrs(data.pullRequests);
         return;
       }
 
@@ -99,6 +108,21 @@ export default function Summary() {
     navigate,
   ]);
 
+  const handleToggleAnalyzedPrs = () => {
+    const willShow = !showAnalyzedPrs;
+    setShowAnalyzedPrs(willShow);
+    if (willShow && analyzedPrs.length > 0) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          tableRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        });
+      });
+    }
+  };
+
   if (!isValidState) {
     navigate("/");
     return;
@@ -136,13 +160,28 @@ export default function Summary() {
       </div>
       {summary && !isGenerating && (
         <div className="mt-4 flex gap-4 items-center">
-          <Button onClick={() => navigate("/", { state: { openGetStartedDialog: true } })}>
+          <Button
+            onClick={() =>
+              navigate("/", { state: { openGetStartedDialog: true } })
+            }
+          >
             <RedoIcon data-icon="inline-start" /> Generate Another
           </Button>
 
-          <Button className="bg-grey hover:bg-grey/80">
-            <EyeIcon data-icon="inline-start" /> View Analyzed PRs
-          </Button>
+          {analyzedPrs.length > 0 && (
+            <Button
+              className="bg-grey hover:bg-grey/80"
+              onClick={handleToggleAnalyzedPrs}
+            >
+              <EyeIcon data-icon="inline-start" />{" "}
+              {showAnalyzedPrs ? "Hide" : "Show"} Analyzed PRs
+            </Button>
+          )}
+        </div>
+      )}
+      {showAnalyzedPrs && analyzedPrs.length > 0 && (
+        <div ref={tableRef}>
+          <PullRequestsTable pullRequests={analyzedPrs} />
         </div>
       )}
     </div>
