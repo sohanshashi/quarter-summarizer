@@ -40,7 +40,7 @@ export class GithubService {
             url: item.html_url,
             createdAt: item.created_at,
             mergedAt: item.pull_request?.merged_at,
-            body: item.body,
+            description: item.body,
             authorId: item.user?.id,
             reviewComments: reviewCommentsByPr[i],
           }),

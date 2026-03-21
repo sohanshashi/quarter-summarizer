@@ -5,7 +5,7 @@ export class PullRequest {
   readonly #url: string;
   readonly #mergedAt: string | null | undefined;
   readonly #createdAt: string;
-  readonly #body: string | null | undefined;
+  readonly #description: string | null | undefined;
   readonly #reviewComments: RestReviewComment[];
   readonly #authorId: number | null | undefined;
 
@@ -14,7 +14,7 @@ export class PullRequest {
     this.#url = data.url;
     this.#mergedAt = data.mergedAt;
     this.#createdAt = data.createdAt;
-    this.#body = data.body;
+    this.#description = data.description;
     this.#reviewComments = data.reviewComments;
     this.#authorId = data.authorId;
   }
@@ -57,10 +57,10 @@ export class PullRequest {
     return new Date(this.#createdAt);
   }
 
-  get body() {
-    if (!this.#body) return null;
+  get description() {
+    if (!this.#description) return null;
 
-    return this.#body;
+    return this.#description;
   }
 
   public reviewThreads() {
@@ -69,7 +69,7 @@ export class PullRequest {
       messages: comments.map((comment) => ({
         role: comment.user.id === this.authorId ? 'Author' : 'Reviewer',
         author: comment.user.login,
-        body: comment.body,
+        text: comment.body,
       })),
     }));
   }
@@ -80,7 +80,7 @@ export class PullRequest {
       url: this.url,
       mergedAt: this.mergedAt,
       createdAt: this.createdAt,
-      body: this.body,
+      description: this.description,
       authorId: this.authorId,
       reviewThreads: this.reviewThreads(),
     };

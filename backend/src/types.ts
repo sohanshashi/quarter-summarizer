@@ -22,5 +22,5 @@ export type PullRequestData = {
   reviewComments: RestReviewComment[];
   authorId?: number;
   mergedAt?: string | null | undefined;
-  body?: string | undefined;
+  description?: string | undefined;
 };
