@@ -1,0 +1,19 @@
+{% for pr in pullRequests %}
+Pull Request {{ loop.index }}
+Title: {{ pr.title }}
+{% if pr.description %}
+Description: {{ pr.description }}
+{% endif %}
+
+{% if pr.reviewThreads | length > 0 %}
+Review Comments:
+{% for thread in pr.reviewThreads %}
+Review Thread {{ loop.index }}
+{% for msg in thread.messages %}
+{{ msg.role }} ({{ msg.author }}): "{{ msg.text }}"
+{% endfor %}
+
+{% endfor %}
+{% endif %}
+
+{% endfor %}
