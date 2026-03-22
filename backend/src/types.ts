@@ -24,3 +24,21 @@ export type PullRequestData = {
   mergedAt?: string | null | undefined;
   description?: string | undefined;
 };
+
+type LLMClassifiedPRCategory =
+  | 'performance'
+  | 'reliability'
+  | 'infrastructure'
+  | 'feature'
+  | 'integration'
+  | 'maintenance';
+
+type LLMClassifiedPRSignificance = 'high' | 'low';
+
+export type LLMClassifiedPullRequest = {
+  title: string;
+  category: LLMClassifiedPRCategory;
+  significance: LLMClassifiedPRSignificance;
+  summary: string;
+  area_of_improvement?: string | null;
+};

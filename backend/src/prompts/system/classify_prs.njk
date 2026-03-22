@@ -6,7 +6,7 @@ For each PR:
 3. Write a 1-2 sentence summary focused on what was accomplished and why it matters. Write in first person. Be specific.
 4. Identify one area_of_improvement: a skill, practice, or focus the engineer could develop based on this PR or review feedback. Set to null if nothing actionable is evident.
 
-Respond ONLY in JSON, no markdown fences, no preamble:
+Respond ONLY in JSON that can be parsed by calling JSON.parse on it without throwing errors. Don't include markdown fences, no preamble. Structure for each PR:
 [
   {
     "title": "Original PR title",
