@@ -15,7 +15,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.NEST_APPLICATION_PORT ?? 3000);
 }
 bootstrap().catch((err) =>
   console.error('Unable to bootstrap nest application', err),
