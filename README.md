@@ -1,6 +1,6 @@
 <div align="center">
 
-# Quarter Summarizer
+# Quarter Summarizer 📝
 
 Turn your merged pull requests into performance-review-ready narratives - powered by AI.
 
@@ -74,3 +74,7 @@ The dev stack exposes port `9229` for the Node.js inspector and the backend star
 
 1. Add `debugger` statements in the backend source code
 2. In VS Code, run the **Debug NestJS app in Docker** launch configuration to attach
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to get started.
