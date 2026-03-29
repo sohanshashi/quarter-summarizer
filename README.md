@@ -78,3 +78,7 @@ The dev stack exposes port `9229` for the Node.js inspector and the backend star
 ## Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to get started.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
