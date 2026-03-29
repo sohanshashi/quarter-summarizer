@@ -1,4 +1,4 @@
-name: Quarter Summarizer Build
+name: Build
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 
 jobs:
   backend:
+    name: Backend Build
     runs-on: ubuntu-latest
 
     defaults:
@@ -31,6 +32,7 @@ jobs:
       - run: npm run build
 
   frontend:
+    name: Frontend Build
     runs-on: ubuntu-latest
 
     defaults:
