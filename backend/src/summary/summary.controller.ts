@@ -71,7 +71,7 @@ export class SummaryController {
 
   @Get('pull_requests')
   async getPullRequests(@Query() query: GetSummaryQueryDto) {
-    const { username, orgName, model, startDate, endDate } = query;
+    const { username, orgName, startDate, endDate } = query;
     const filter = this.getFilterQuery({
       username,
       orgName,

@@ -11,14 +11,12 @@ export function Usage() {
   const location = useLocation();
   const navigate = useNavigate();
   const [availableModels, setAvailableModels] = useState<string[]>([]);
-  const [dialogOpen, setDialogOpen] = useState(false);
-
   const locationState = location.state as { openGetStartedDialog?: boolean } | null;
+  const [dialogOpen, setDialogOpen] = useState(!!locationState?.openGetStartedDialog);
 
   useEffect(() => {
     if (locationState?.openGetStartedDialog) {
-      setDialogOpen(true);
-      navigate("/", { replace: true }); // trick: avoid page refresh from opening dialog when already opened
+      navigate("/", { replace: true });
     }
   }, [locationState?.openGetStartedDialog, navigate]);
 
