@@ -27,7 +27,11 @@ export class SummaryController {
           });
 
           const pullRequests = await this.githubService.getPullRequests(filter);
-          const stream = await this.aiService.getAiSummary(pullRequests, model);
+          const stream = await this.aiService.getAiSummary(
+            pullRequests,
+            model,
+            { startDate, endDate },
+          );
 
           subscriber.next({
             data: {
