@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# Development stage - has all deps, runs in watch mode
+# Development stage - has all deps, runs in watch + debug mode
 FROM base AS development
 
 RUN npm install
