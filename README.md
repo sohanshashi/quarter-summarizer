@@ -10,6 +10,9 @@ Turn your merged pull requests into performance-review-ready narratives - powere
 
 Quarter Summarizer fetches your merged PRs from a GitHub organization, classifies them by impact, and streams a first-person self-review summary using the LLM of your choice. Pick a quarter (or custom date range), select a model, and get a polished write-up in seconds - so you can spend your time shipping code, not writing self-reviews.
 
+> [!NOTE]
+> The quality of the generated summary depends on the quality of your PR descriptions. The more context your PRs have, the better the narrative — a little effort at merge time goes a long way at review time!
+
 ## Getting Started
 
 ### Prerequisites
@@ -24,6 +27,16 @@ A **classic** PAT is required to fetch pull request data from GitHub.
 2. Click **Generate new token (classic)**
 3. Select the **`repo`** scope (needed to access PRs in private repositories)
 4. Copy the token — you'll need it in the next step
+5. If you want to analyze PRs from an **organization's** repositories, click **Configure SSO** next to the token and **Authorize** it for that org
+
+   <img src="assets/pat-sso-authorize.png" alt="Authorize token for SSO" width="600" />
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/your-username/quarter-summarizer.git
+cd quarter-summarizer
+```
 
 ### Configure Environment
 
