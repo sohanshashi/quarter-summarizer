@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CalendarRangeIcon, Undo2Icon } from "lucide-react";
 
@@ -11,6 +11,17 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 import { getAvailableQuarters } from "@/lib/utils";
+import type { PersistedFormState } from "@/lib/types";
+
+const STORAGE_KEY = "quarter-summarizer:form";
+
+function readPersistedForm(): Partial<PersistedFormState> {
+  try {
+    return JSON.parse(sessionStorage.getItem(STORAGE_KEY) ?? "{}");
+  } catch {
+    return {};
+  }
+}
 
 type GenerateSummaryFormProps = {
   availableModels: string[];
@@ -21,18 +32,36 @@ export function GenerateSummaryForm({
 }: GenerateSummaryFormProps) {
   const navigate = useNavigate();
   const quarters = useMemo(() => getAvailableQuarters(), []);
+  const persisted = useMemo(() => readPersistedForm(), []);
 
-  const [username, setUsername] = useState("");
-  const [organization, setOrganization] = useState("");
+  const [username, setUsername] = useState(persisted.username ?? "");
+  const [organization, setOrganization] = useState(persisted.organization ?? "");
   const [selectedQuarterIndex, setSelectedQuarterIndex] = useState(
-    quarters.length - 1,
+    persisted.selectedQuarterIndex ?? quarters.length - 1,
   );
-  const [useCustomDates, setUseCustomDates] = useState(false);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [useCustomDates, setUseCustomDates] = useState(persisted.useCustomDates ?? false);
+  const [startDate, setStartDate] = useState(persisted.startDate ?? "");
+  const [endDate, setEndDate] = useState(persisted.endDate ?? "");
   const [aiModel, setAiModel] = useState(
-    availableModels.length > 0 ? availableModels[0] : "",
+    persisted.aiModel ?? (availableModels.length > 0 ? availableModels[0] : ""),
   );
+
+  useEffect(() => {
+    const data: PersistedFormState = {
+      username,
+      organization,
+      selectedQuarterIndex,
+      useCustomDates,
+      startDate,
+      endDate,
+      aiModel,
+    };
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch {
+      // storage unavailable — silently ignore
+    }
+  }, [username, organization, selectedQuarterIndex, useCustomDates, startDate, endDate, aiModel]);
 
   const isSubmitButtonDisabled = useMemo(() => {
     if (username.length <= 0 || organization.length <= 0 || aiModel.length <= 0)

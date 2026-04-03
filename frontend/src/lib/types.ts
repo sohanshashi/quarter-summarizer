@@ -28,6 +28,16 @@ export type SummaryState = {
   selectedQuarter: Quarter;
 };
 
+export type PersistedFormState = {
+  username: string;
+  organization: string;
+  selectedQuarterIndex: number;
+  useCustomDates: boolean;
+  startDate: string;
+  endDate: string;
+  aiModel: string;
+};
+
 export type PullRequestApiData = {
   title: string;
   url: string;
