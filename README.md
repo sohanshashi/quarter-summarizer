@@ -92,6 +92,18 @@ The dev stack exposes port `9229` for the Node.js inspector and the backend star
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to get started.
 
+## Why run locally instead of a hosted service?
+
+The goal is simple: This tool is designed to be **developer first.** Anyone should be able to use Quarter Summarizer, no matter which company or GitHub organization they work in.
+
+If this were a hosted website, it would realistically behave like **one shared product** tied to whoever runs the servers. Whether that product can see your organization’s private repos and PR history is often **not up to you as a developer**. An **organization administrator** decides if outside tools are allowed, and that decision is **per organization**. A hosted service can’t assume every company will say yes, so in practice it tends to work cleanly for **one** org (or a small set that explicitly opts in), not as something any developer can pick up and use on their own.
+
+Running it on **your machine** avoids that. You connect with **your own** GitHub access (see [Create a GitHub Personal Access Token](#create-a-github-personal-access-token)), the same way you already use GitHub day to day. There is no central service asking every org to trust the same third-party app.
+
+On GitHub, authorizing a hosted app for organization repos shows a screen like the one below. Under **Organization access**, you can see a **Request** button for the org. If you only click the main **Authorize** button and skip that step, the app **still cannot read your organization’s repositories**. **Merged PRs in the org would not show up**, which defeats the point of Quarter Summarizer. **Request** means you are asking an **administrator** to allow the app. You cannot complete that part of access on your own.
+
+<img src="assets/why-not-hosted.png" alt="GitHub authorization screen showing organization access and a Request button for admin approval" width="600" />
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
