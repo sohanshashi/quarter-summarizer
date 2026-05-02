@@ -16,7 +16,7 @@ type UseApiValidationOptions = {
    * Optional local validation on the trimmed value. Return a message to treat the
    * field as invalid (no API request); return `undefined` to allow the fetch.
    */
-  validationFn?: (trimmed: string) => string | undefined;
+  validationFn?: (trimmed: string) => string | null;
   debounceMs?: number;
   notFoundMessage?: string;
   errorMessage?: string;
