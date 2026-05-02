@@ -1,12 +1,17 @@
 import type { UsageCardData } from "./types";
 
-const githubApiBaseUrl = "https://api.github.com";
+const GITHUB_BASE_URL = "https://api.github.com";
+
+export const GITHUB_LOGIN_PATTERN =
+  /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,37}[a-zA-Z0-9])?$/;
 
 export const ApiEndpoints = Object.freeze({
   generateSummary: (query: string) => `/api/summary?${query}`,
   availableModels: () => "/api/summary/available_models",
   githubPublicProfile: (username: string) =>
-    `${githubApiBaseUrl}/users/${username}`,
+    `${GITHUB_BASE_URL}/users/${encodeURIComponent(username)}`,
+  githubOrganization: (org: string) =>
+    `${GITHUB_BASE_URL}/orgs/${encodeURIComponent(org)}`,
 });
 
 export const editorTheme = {

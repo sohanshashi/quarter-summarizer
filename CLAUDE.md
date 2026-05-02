@@ -99,6 +99,7 @@ LLM client defaults to Ollama (`http://host.docker.internal:11434/v1`) when `LLM
 React + Vite + TypeScript SPA using Tailwind CSS and shadcn/ui components.
 
 Two routes:
+
 - `/` (`Home`) — landing page with a "Get Started" dialog for entering GitHub username, org, date range, and model selection
 - `/summary` (`Summary`) — receives form state via `react-router-dom` location state; opens an `EventSource` to `GET /api/summary?...` and streams content into a Lexical rich-text editor (`ResponseTextArea`)
 
@@ -108,12 +109,17 @@ API base URLs are defined in `frontend/src/lib/constants.ts` (`ApiEndpoints`). I
 
 Copy `backend/.env.example` to `backend/.env`:
 
-| Variable | Required | Notes |
-|---|:---:|---|
-| `GITHUB_PERSONAL_ACCESS_TOKEN` | Yes | Classic PAT with `repo` scope; authorize SSO for org access |
-| `LLM_API_KEY` | No | Falls back to Ollama if blank |
-| `LLM_BASE_URL` | No | Falls back to `http://host.docker.internal:11434/v1` |
-| `DEVELOPER_ROLE` | No | Injected into the summarization prompt for context |
+| Variable                       | Required | Notes                                                       |
+| ------------------------------ | :------: | ----------------------------------------------------------- |
+| `GITHUB_PERSONAL_ACCESS_TOKEN` |   Yes    | Classic PAT with `repo` scope; authorize SSO for org access |
+| `LLM_API_KEY`                  |    No    | Falls back to Ollama if blank                               |
+| `LLM_BASE_URL`                 |    No    | Falls back to `http://host.docker.internal:11434/v1`        |
+| `DEVELOPER_ROLE`               |    No    | Injected into the summarization prompt for context          |
+
+## Frontend Coding Conventions
+
+- **Cancelling async operations in `useEffect`**: Use `AbortController` and pass `signal` to `fetch`. Do not use a `cancelled` boolean flag. In the cleanup, call `controller.abort()`. In the catch block, guard with `if (hasRequestAborted) return;` to suppress abort errors.
+- **Avoid synchronous `setState` inside `useEffect`**: Calling `setState` synchronously (before any `await` or `setTimeout`) triggers cascading renders. Derive synchronous state with `useMemo` during render instead, and only call `setState` inside async callbacks within effects.
 
 ## VS Code Debugging
 

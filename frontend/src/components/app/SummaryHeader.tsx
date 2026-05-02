@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import type { SummaryState } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { ApiEndpoints } from "@/lib/constants";
+import { hasRequestAborted } from "@/lib/utils";
 
 export function SummaryHeader({
   organization,
@@ -30,9 +31,7 @@ export function SummaryHeader({
           },
         );
 
-        if (!response.ok) {
-          return;
-        }
+        if (controller.signal.aborted || !response.ok) return;
 
         const profileData = await response.json();
 
@@ -40,6 +39,7 @@ export function SummaryHeader({
           setProfilePictureUrl(profileData.avatar_url);
         }
       } catch (err) {
+        if (hasRequestAborted(err)) return;
         console.error("Failed to fetch github profile:", err);
       }
     }

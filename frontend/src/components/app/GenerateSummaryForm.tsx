@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { CalendarRangeIcon, Undo2Icon } from "lucide-react";
+import { CalendarRangeIcon, Undo2Icon, Loader2 } from "lucide-react";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -10,8 +10,14 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-import { getAvailableQuarters } from "@/lib/utils";
+import {
+  getAvailableQuarters,
+  validateGithubOrganizationFormat,
+  validateGithubUsernameFormat,
+} from "@/lib/utils";
+import { ApiEndpoints } from "@/lib/constants";
 import type { PersistedFormState } from "@/lib/types";
+import { useApiValidation } from "@/hooks/useApiValidation";
 
 const STORAGE_KEY = "quarter-summarizer:form";
 
@@ -35,11 +41,15 @@ export function GenerateSummaryForm({
   const persisted = useMemo(() => readPersistedForm(), []);
 
   const [username, setUsername] = useState(persisted.username ?? "");
-  const [organization, setOrganization] = useState(persisted.organization ?? "");
+  const [organization, setOrganization] = useState(
+    persisted.organization ?? "",
+  );
   const [selectedQuarterIndex, setSelectedQuarterIndex] = useState(
     persisted.selectedQuarterIndex ?? quarters.length - 1,
   );
-  const [useCustomDates, setUseCustomDates] = useState(persisted.useCustomDates ?? false);
+  const [useCustomDates, setUseCustomDates] = useState(
+    persisted.useCustomDates ?? false,
+  );
   const [startDate, setStartDate] = useState(persisted.startDate ?? "");
   const [endDate, setEndDate] = useState(persisted.endDate ?? "");
   const [aiModel, setAiModel] = useState(
@@ -61,18 +71,54 @@ export function GenerateSummaryForm({
     } catch {
       // storage unavailable — silently ignore
     }
-  }, [username, organization, selectedQuarterIndex, useCustomDates, startDate, endDate, aiModel]);
+  }, [
+    username,
+    organization,
+    selectedQuarterIndex,
+    useCustomDates,
+    startDate,
+    endDate,
+    aiModel,
+  ]);
+
+  const usernameField = useApiValidation({
+    value: username,
+    url: ApiEndpoints.githubPublicProfile(username.trim()),
+    validationFn: validateGithubUsernameFormat,
+    notFoundMessage: "GitHub user not found",
+    errorMessage: "Could not verify GitHub user",
+  });
+
+  const organizationField = useApiValidation({
+    value: organization,
+    url: ApiEndpoints.githubOrganization(organization.trim()),
+    validationFn: validateGithubOrganizationFormat,
+    notFoundMessage: "GitHub organization not found",
+    errorMessage: "Could not verify GitHub organization",
+  });
 
   const isSubmitButtonDisabled = useMemo(() => {
     if (username.length <= 0 || organization.length <= 0 || aiModel.length <= 0)
       return true;
 
-    if (useCustomDates && (startDate.length <= 0 || endDate.length <= 0)) {
+    if (usernameField.status !== "valid") return true;
+
+    if (organizationField.status !== "valid") return true;
+
+    if (useCustomDates && (startDate.length <= 0 || endDate.length <= 0))
       return true;
-    }
 
     return false;
-  }, [endDate, startDate, useCustomDates, username, organization, aiModel]);
+  }, [
+    endDate,
+    startDate,
+    useCustomDates,
+    username,
+    organization,
+    aiModel,
+    usernameField,
+    organizationField,
+  ]);
 
   const selectedQuarter = quarters[selectedQuarterIndex];
 
@@ -114,25 +160,63 @@ export function GenerateSummaryForm({
             className="pr-10"
             required
           />
-          {username && (
+          {usernameField.status === "checking" && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+              <Loader2 size={16} className="animate-spin" />
+            </div>
+          )}
+          {usernameField.status === "valid" && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500">
               ✓
             </div>
           )}
+          {usernameField.status === "invalid" && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500">
+              ✗
+            </div>
+          )}
         </div>
+        {usernameField.status === "invalid" && usernameField.message && (
+          <p className="text-xs text-red-500 mt-1">{usernameField.message}</p>
+        )}
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="organization" className="text-sm font-medium gap-0.5">
           GitHub Organization<span className="text-red-500">*</span>
         </Label>
-        <Input
-          id="organization"
-          type="text"
-          placeholder="Eg: discord"
-          value={organization}
-          onChange={(e) => setOrganization(e.target.value)}
-        />
+        <div className="relative">
+          <Input
+            id="organization"
+            type="text"
+            placeholder="Eg: discord"
+            value={organization}
+            onChange={(e) => setOrganization(e.target.value)}
+            className="pr-10"
+            required
+          />
+          {organizationField.status === "checking" && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+              <Loader2 size={16} className="animate-spin" />
+            </div>
+          )}
+          {organizationField.status === "valid" && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500">
+              ✓
+            </div>
+          )}
+          {organizationField.status === "invalid" && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500">
+              ✗
+            </div>
+          )}
+        </div>
+        {organizationField.status === "invalid" &&
+          organizationField.message && (
+            <p className="text-xs text-red-500 mt-1">
+              {organizationField.message}
+            </p>
+          )}
       </div>
 
       <div className="space-y-2">

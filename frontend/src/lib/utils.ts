@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 import type { Quarter } from "./types";
-import { quarterToMonthRangeMapping } from "./constants";
+import { GITHUB_LOGIN_PATTERN, quarterToMonthRangeMapping } from "./constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -31,8 +31,11 @@ export function getAvailableQuarters(): Quarter[] {
   return quarters.reverse();
 }
 
-function createQuarter(quarter: number , year: number): Quarter {
-  const range = quarterToMonthRangeMapping[quarter as keyof typeof quarterToMonthRangeMapping];
+function createQuarter(quarter: number, year: number): Quarter {
+  const range =
+    quarterToMonthRangeMapping[
+      quarter as keyof typeof quarterToMonthRangeMapping
+    ];
 
   return {
     label: `Q${quarter} ${year} (${range.label})`,
@@ -40,4 +43,24 @@ function createQuarter(quarter: number , year: number): Quarter {
     startDate: `${year}-${range.start}`,
     endDate: `${year}-${range.end}`,
   };
+}
+
+export function hasRequestAborted(err: unknown) {
+  return !!(err instanceof DOMException && err.name === "AbortError");
+}
+
+export function validateGithubUsernameFormat(trimmed: string): string | null {
+  if (!GITHUB_LOGIN_PATTERN.test(trimmed)) {
+    return "Invalid username format";
+  }
+  return null;
+}
+
+export function validateGithubOrganizationFormat(
+  trimmed: string,
+): string | null {
+  if (!GITHUB_LOGIN_PATTERN.test(trimmed)) {
+    return "Invalid organization name format";
+  }
+  return null;
 }

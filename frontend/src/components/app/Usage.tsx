@@ -6,13 +6,18 @@ import { UsageCard } from "./UsageCard";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { GenerateSummaryForm } from "./GenerateSummaryForm";
 import type { AvailableModel } from "@/lib/types";
+import { hasRequestAborted } from "@/lib/utils";
 
 export function Usage() {
   const location = useLocation();
   const navigate = useNavigate();
   const [availableModels, setAvailableModels] = useState<string[]>([]);
-  const locationState = location.state as { openGetStartedDialog?: boolean } | null;
-  const [dialogOpen, setDialogOpen] = useState(!!locationState?.openGetStartedDialog);
+  const locationState = location.state as {
+    openGetStartedDialog?: boolean;
+  } | null;
+  const [dialogOpen, setDialogOpen] = useState(
+    !!locationState?.openGetStartedDialog,
+  );
 
   useEffect(() => {
     if (locationState?.openGetStartedDialog) {
@@ -25,14 +30,17 @@ export function Usage() {
 
     async function fetchAvailableModels() {
       try {
-        const response = await fetch(ApiEndpoints.availableModels());
-        if (!response.ok) return;
+        const response = await fetch(ApiEndpoints.availableModels(), {
+          signal: controller.signal,
+        });
+        if (controller.signal.aborted || !response.ok) return;
 
         const { data } = await response.json();
         setAvailableModels(
           data.map((modelData: AvailableModel) => modelData.id),
         );
       } catch (err) {
+        if (hasRequestAborted(err)) return;
         console.error("Failed to fetch available models:", err);
       }
     }
