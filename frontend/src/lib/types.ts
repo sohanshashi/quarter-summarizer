@@ -45,3 +45,10 @@ export type PullRequestApiData = {
   createdAt: Date;
   body: string | null;
 };
+
+export type ApiValidationStatus = "idle" | "checking" | "valid" | "invalid";
+
+export type ApiValidationResult = {
+  status: ApiValidationStatus;
+  message?: string;
+};
